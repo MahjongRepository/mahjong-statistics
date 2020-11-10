@@ -54,3 +54,6 @@ class LogParser:
 
     def is_init_tag(self, tag):
         return tag and "INIT" in tag
+
+    def is_agari_tag(self, tag):
+        return tag and "AGARI" in tag

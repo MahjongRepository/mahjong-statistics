@@ -19,7 +19,7 @@ def load_logs_from_db(db_path: str, limit: Optional[int] = None, offset: Optiona
             cursor.execute("SELECT log_id, log_content FROM logs where is_sanma = 0 ORDER BY date DESC;")
         else:
             cursor.execute(
-                "SELECT log_id, log_content FROM logs where is_sanma = 0 ORDER BY log_id LIMIT ? OFFSET ?;",
+                "SELECT log_id, log_content FROM logs where is_sanma = 0 ORDER BY date LIMIT ? OFFSET ?;",
                 [limit, offset],
             )
             # cursor.execute('SELECT log_id, log_content FROM logs where log_id = "2018050310gm-00a9-0000-786296ec";')
@@ -27,6 +27,10 @@ def load_logs_from_db(db_path: str, limit: Optional[int] = None, offset: Optiona
 
     results = []
     for x in data:
-        results.append({"log_id": x[0], "log_content": bz2.decompress(x[1]).decode("utf-8")})
+        log_id = x[0]
+        try:
+            results.append({"log_id": log_id, "log_content": bz2.decompress(x[1]).decode("utf-8")})
+        except:
+            print(log_id)
 
     return results

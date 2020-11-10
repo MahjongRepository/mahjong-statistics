@@ -1,2 +1,3 @@
 .idea
 parser/env
+__pycache__

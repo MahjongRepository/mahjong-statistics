@@ -14,14 +14,33 @@ class Statistics:
 
     def calculate_statistics(self):
         print("Loading logs from db...")
-        logs = load_logs_from_db(self.db_path)
+        logs = load_logs_from_db(self.db_path, offset=1000000, limit=200000)
         progress_bar = tqdm(logs, position=1)
         for log in progress_bar:
             parsed_rounds = self.parser.split_log_to_game_rounds(log["log_content"])
 
-            result = self.find_high_level_games(log["log_id"], parsed_rounds)
-            if result:
-                progress_bar.write(result)
+            self.find_yakumans(log["log_id"], parsed_rounds, progress_bar)
+
+            # result = self.find_high_level_games(log["log_id"], parsed_rounds)
+            # if result:
+            #     progress_bar.write(result)
+
+    def find_yakumans(self, log_id, parsed_rounds, progress_bar):
+        for round_data in parsed_rounds:
+                if self.parser.is_agari_tag(tag):
+
+                    # if 'yaku=' in tag:
+                    #     han = sum([int(x) for x in self.parser.get_attribute_content(tag, 'yaku').split(',')[1::2]])
+                    #     if han >= 20:
+                    #         progress_bar.write(str(han) + f' https://tenhou.net/0/?log={log_id}')
+
+                    if 'yakuman=' in tag:
+                        yakuman = self.parser.get_attribute_content(tag, 'yakuman').split(',')
+                        if ('37' in yakuman or '38' in yakuman) and len(yakuman) >= 2:
+                            progress_bar.write(str(len(yakuman)) + f' https://tenhou.net/0/?log={log_id}')
+
+                        # if len(yakuman) >= 3:
+                        #     progress_bar.write(str(len(yakuman)) + f' https://tenhou.net/0/?log={log_id}')
 
     def find_high_level_games(self, log_id: str, parsed_rounds: List) -> Optional[str]:
         start_game_tag = parsed_rounds[0][0]
